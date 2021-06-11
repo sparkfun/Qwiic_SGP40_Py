@@ -77,8 +77,8 @@ class QwiicSGP40(object):
   available_addresses = _AVAILABLE_I2C_ADDRESS
   
   # SGP40 I2C commands
-  #SGP40_MEASURE_RAW = [0x26, 0x0F]
-  SGP40_MEASURE_RAW = 0x260F
+  SGP40_MEASURE_RAW = [0x26, 0x0F]
+  #SGP40_MEASURE_RAW = 0x0F26
   SGP40_MEASURE_TEST = [0x28, 0x0E]
   SGP40_HEATER_OFF = [0x36, 0x15]
   SGP40_SOFT_RESET = [0x00, 0x06]
@@ -144,9 +144,9 @@ class QwiicSGP40(object):
     """
     if self.is_connected() == True:
       
-      # # For debugging
-      # print("\nSGP40 passed is_connected!")
-      # return True 
+      # For debugging
+      print("\nSGP40 passed is_connected!")
+      #return True 
       
       print("\nWaiting " + str(warm_up_time) + " seconds for the SGP40 to warm-up.")
       
@@ -169,7 +169,10 @@ class QwiicSGP40(object):
       :return: Returns 0 if the self-test succeeded and 1 if it failed.
       :rtype: int
     """
-    self._i2c.writeWord(self.address, 0, self.SGP40_MEASURE_TEST)
+    temp0 = self.SGP40_MEASURE_TEST[0]
+    temp1 = self.SGP40_MEASURE_TEST[1]
+    
+    self._i2c.writeByte(self.address, temp0, temp1)
     time.sleep(self.DURATION_WAIT_MEASURE_TEST)
     result = self._i2c.readWord(self.address, 0)
     if result == self.SGP40_MEASURE_TEST_PASS:
@@ -227,9 +230,17 @@ class QwiicSGP40(object):
     if self.__temperature_c > 130:
       self.__temperature_c = 130
       
+    # # Debug
+    # print("\n__relative_humidity: " + str(__relative_humidity))
+    # print("\n__temperature_c: " + str(__temperature_c))
+    # #print(self.__relative_humidity)
+    # #print(self.__temperature_c)
+    
     # Calculate relative humidity and temperature ticks
-    self.__rh = int(((self.__relative_humidity*65535)/100+0.5))
-    self.__temc = int(((self.__temperature_c+45)*(65535/175)+0.5))
+    # self.__rh = int(((self.__relative_humidity*65535)/100+0.5))
+    # self.__temc = int(((self.__temperature_c+45)*(65535/175)+0.5))
+    self.__rh = int(((__relative_humidity*65535)/100+0.5))
+    self.__temc = int(((__temperature_c+45)*(65535/175)+0.5))
     # Break it into bytes and calculate CRC
     self.__rh_h = int(self.__rh)>>8
     self.__rh_l = int(self.__rh)&0xFF
@@ -238,16 +249,34 @@ class QwiicSGP40(object):
     self.__temc_l = int(self.__temc)&0xFF
     self.__temc__crc = self.__crc(self.__temc_h, self.__temc_l)
     
-    # TODO: figure out if this is right...
-    self._i2c.writeWord(self.address, self.SGP40_MEASURE_RAW, 0)
+    # # Debug
+    # print("\n__rh: " + str(self.__rh))
+    # print("\n__temc: " + str(self.__temc))
+    # print("\n__rh: " + str(hex(self.__rh)))
+    # print("\n__rh_h: " + str(hex(self.__rh_h)))
+    # print("\n__rh_l: " + str(hex(self.__rh_l)))
+    # print("\n__rh__crc: " + str(self.__rh__crc))
+    # print("\n__temc: " + str(hex(self.__temc)))
+    # print("\n__temc_h: " + str(hex(self.__temc_h)))
+    # print("\n__temc_l: " + str(hex(self.__temc_l)))
+    # print("\n__temc__crc: " + str(self.__temc__crc))
     
-    self._i2c.writeByte(self.address, 0, self.__rh_h)
-    self._i2c.writeByte(self.address, 0, self.__rh_l)
-    self._i2c.writeByte(self.address, 0, self.__rh__crc)
+    temp0 = int(self.SGP40_MEASURE_RAW[0])
+    temp1 = int(self.SGP40_MEASURE_RAW[1])
+    write_bytes = [temp1, int(self.__rh_h), int(self.__rh_l), int(self.__rh__crc), int(self.__temc_h), int(self.__temc_l), int(self.__temc__crc)]
     
-    self._i2c.writeByte(self.address, 0, self.__temc_h)
-    self._i2c.writeByte(self.address, 0, self.__temc_l)
-    self._i2c.writeByte(self.address, 0, self.__temc__crc)
+    # # Debug
+    # print(write_bytes)
+    
+    self._i2c.writeBlock(self.address, temp0, write_bytes)
+    
+    # self._i2c.writeByte(self.address, 0, self.__rh_h)
+    # self._i2c.writeByte(self.address, 0, self.__rh_l)
+    # self._i2c.writeByte(self.address, 0, self.__rh__crc)
+    
+    # self._i2c.writeByte(self.address, 0, self.__temc_h)
+    # self._i2c.writeByte(self.address, 0, self.__temc_l)
+    # self._i2c.writeByte(self.address, 0, self.__temc__crc)
     
     time.sleep(self.DURATION_READ_RAW_VOC)
     
@@ -295,11 +324,12 @@ class QwiicSGP40(object):
     for i in range(0, 2):
       crc = crc ^ list[i]
       for bit in range(0, 8):
-        if (crc & 0x08):
+        if (crc & 0x80):
           crc = ((crc << 1) ^ 0x31)
         else:
           crc = (crc << 1)
       crc = crc & 0xFF
+    return crc
       
   # --------------------------------------------------------------------
   # get_VOC_index(self.__relative_humidity, self.__tempertature_c)
@@ -316,10 +346,11 @@ class QwiicSGP40(object):
       :rtype: int
     """
     raw = 0
-    self.measure_raw(raw, self.__relative_humidity, self.__temperature_c)
-    
+    # self.measure_raw(raw, self.__relative_humidity, self.__temperature_c)
+    self.measure_raw(raw, __relative_humidity, __temperature_c)
+
     if raw < 0:
       return -1
     else:
-      voc_index = self.__my_vocalgorithm.socalgorithm_process(raw)
+      voc_index = self.__my_vocalgorithm.vocalgorithm_process(raw)
       return voc_index 
