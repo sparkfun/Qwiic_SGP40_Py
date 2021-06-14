@@ -78,14 +78,13 @@ class QwiicSGP40(object):
   
   # SGP40 I2C commands
   SGP40_MEASURE_RAW = [0x26, 0x0F]
-  #SGP40_MEASURE_RAW = 0x0F26
   SGP40_MEASURE_TEST = [0x28, 0x0E]
   SGP40_HEATER_OFF = [0x36, 0x15]
   SGP40_SOFT_RESET = [0x00, 0x06]
   
   # SGP40 Measure Test Results
-  SGP40_MEASURE_TEST_PASS = 0xD400
-  SGP40_MEASURE_TEST_FAIL = 0x4B00
+  SGP40_MEASURE_TEST_PASS = [0xD4, 0x00]
+  SGP40_MEASURE_TEST_FAIL = [0x4B, 0x00]
   
   DURATION_WAIT_MEASURE_TEST = 0.25
   DURATION_READ_RAW_VOC = 0.03
@@ -106,8 +105,6 @@ class QwiicSGP40(object):
       self._i2c = i2c_driver
         
     self.__my_vocalgorithm = DFRobot_VOCAlgorithm()
-    self.__temperature_c = 0
-    self.__relative_humidity = 0
     self.__rh = 0
     self.__temc = 0
     self.__rh_h = 0
@@ -144,10 +141,6 @@ class QwiicSGP40(object):
     """
     if self.is_connected() == True:
       
-      # For debugging
-      print("\nSGP40 passed is_connected!")
-      #return True 
-      
       print("\nWaiting " + str(warm_up_time) + " seconds for the SGP40 to warm-up.")
       
       self.__my_vocalgorithm.vocalgorithm_init()
@@ -174,8 +167,9 @@ class QwiicSGP40(object):
     
     self._i2c.writeByte(self.address, temp0, temp1)
     time.sleep(self.DURATION_WAIT_MEASURE_TEST)
-    result = self._i2c.readWord(self.address, 0)
-    if result == self.SGP40_MEASURE_TEST_PASS:
+    result = self._i2c.readBlock(self.address, 0, 3)
+    
+    if result[0] == self.SGP40_MEASURE_TEST_PASS[0] and result[1] == self.SGP40_MEASURE_TEST_PASS[1]:
       return 0
     else:
       return 1
@@ -190,7 +184,9 @@ class QwiicSGP40(object):
       
       :rtype: void - returns nothing
     """
-    self._i2c.writeWord(self.address, 0, self.SGP40_SOFT_RESET)
+    temp0 = self.SGP40_SOFT_RESET[0]
+    temp1 = self.SGP40_SOFT_RESET[1]
+    self._i2c.writeByte(self.address, temp0, temp1)
 
   # --------------------------------------------------------------------
   # heater_off()
@@ -202,43 +198,38 @@ class QwiicSGP40(object):
       
       :rtype: void - returns nothing
     """
-    self._i2c.writeWord(self.address, 0, self.SGP40_HEATER_OFF)
+    temp0 = self.SGP40_HEATER_OFF[0]
+    temp1 = self.SGP40_HEATER_OFF[1]
+    self._i2c.writeWord(self.address, temp0, temp1)
 
   # --------------------------------------------------------------------
-  # measure_raw(SRAW_ticks, self.__relative_humidity, self.__temperature_c)
+  # measure_raw(__relative_humidity, __temperature_c)
   #
   # The raw signal is returned in SRAW_ticks. The user can provide relative
   # humidity or temperature parameters if desired.
-  def measure_raw(self, SRAW_ticks, __relative_humidity = 50, __temperature_c = 25):
+  def measure_raw(self, __relative_humidity = 50, __temperature_c = 25):
     """
       Returns the raw data. See the SGP40 datasheet for more info.
       
       :param SRAW_ticks: variable to assign raw measurement to
-      :param self.__relative_humidity: float relative humidity between 0 and 100%.
-      :param self.__temperature_c: float temperature in celcius between -45 and 130 degrees.
+      :param __relative_humidity: float relative humidity between 0 and 100%.
+      :param __temperature_c: float temperature in celcius between -45 and 130 degrees.
       
       :return: 0 if CRC checks out, -1 otherwise
       :rtype: int
     """
     # Check boundaries of relative humidity and temperature
-    if self.__relative_humidity < 0:
-      self.__relative_humidity = 0
-    if self.__relative_humidity > 100:
-      self.__relative_humidity = 100
-    if self.__temperature_c < -45:
-      self.__temperature_c = -45
-    if self.__temperature_c > 130:
-      self.__temperature_c = 130
-      
-    # # Debug
-    # print("\n__relative_humidity: " + str(__relative_humidity))
-    # print("\n__temperature_c: " + str(__temperature_c))
-    # #print(self.__relative_humidity)
-    # #print(self.__temperature_c)
+    if __relative_humidity < 0:
+      __relative_humidity = 0
+    if __relative_humidity > 100:
+      __relative_humidity = 100
+    if __temperature_c < -45:
+      __temperature_c = -45
+    if __temperature_c > 130:
+      __temperature_c = 130
+
     
     # Calculate relative humidity and temperature ticks
-    # self.__rh = int(((self.__relative_humidity*65535)/100+0.5))
-    # self.__temc = int(((self.__temperature_c+45)*(65535/175)+0.5))
     self.__rh = int(((__relative_humidity*65535)/100+0.5))
     self.__temc = int(((__temperature_c+45)*(65535/175)+0.5))
     # Break it into bytes and calculate CRC
@@ -249,43 +240,19 @@ class QwiicSGP40(object):
     self.__temc_l = int(self.__temc)&0xFF
     self.__temc__crc = self.__crc(self.__temc_h, self.__temc_l)
     
-    # # Debug
-    # print("\n__rh: " + str(self.__rh))
-    # print("\n__temc: " + str(self.__temc))
-    # print("\n__rh: " + str(hex(self.__rh)))
-    # print("\n__rh_h: " + str(hex(self.__rh_h)))
-    # print("\n__rh_l: " + str(hex(self.__rh_l)))
-    # print("\n__rh__crc: " + str(self.__rh__crc))
-    # print("\n__temc: " + str(hex(self.__temc)))
-    # print("\n__temc_h: " + str(hex(self.__temc_h)))
-    # print("\n__temc_l: " + str(hex(self.__temc_l)))
-    # print("\n__temc__crc: " + str(self.__temc__crc))
-    
     temp0 = int(self.SGP40_MEASURE_RAW[0])
     temp1 = int(self.SGP40_MEASURE_RAW[1])
     write_bytes = [temp1, int(self.__rh_h), int(self.__rh_l), int(self.__rh__crc), int(self.__temc_h), int(self.__temc_l), int(self.__temc__crc)]
     
-    # # Debug
-    # print(write_bytes)
-    
     self._i2c.writeBlock(self.address, temp0, write_bytes)
-    
-    # self._i2c.writeByte(self.address, 0, self.__rh_h)
-    # self._i2c.writeByte(self.address, 0, self.__rh_l)
-    # self._i2c.writeByte(self.address, 0, self.__rh__crc)
-    
-    # self._i2c.writeByte(self.address, 0, self.__temc_h)
-    # self._i2c.writeByte(self.address, 0, self.__temc_l)
-    # self._i2c.writeByte(self.address, 0, self.__temc__crc)
-    
+
     time.sleep(self.DURATION_READ_RAW_VOC)
     
     # Data is read back in 3 bytes: data (MSB) / data (LSB) / Cecksum
     result = self._i2c.readBlock(self.address, 0, 3)
     
     if self.__check_crc(result) == 0:
-      SRAW_ticks = result[0] << 8 | result[1]
-      return 0
+      return result[0]<<8 | result[1]
     else:
       return -1
   
@@ -339,15 +306,13 @@ class QwiicSGP40(object):
     """
       Get VOC index
       
-      :param self.__relative_humidity: float relative humidity between 0 and 100%.
-      :param self.__temperature_c: float temperature in celcius between -45 and 130 degrees.
+      :param __relative_humidity: float relative humidity between 0 and 100%.
+      :param __temperature_c: float temperature in celcius between -45 and 130 degrees.
       
       :return: VOC index
       :rtype: int
     """
-    raw = 0
-    # self.measure_raw(raw, self.__relative_humidity, self.__temperature_c)
-    self.measure_raw(raw, __relative_humidity, __temperature_c)
+    raw = self.measure_raw(__relative_humidity, __temperature_c)
 
     if raw < 0:
       return -1
