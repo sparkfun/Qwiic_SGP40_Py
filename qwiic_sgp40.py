@@ -295,6 +295,9 @@ class QwiicSGP40(object):
           crc = ((crc << 1) ^ 0x31)
         else:
           crc = (crc << 1)
+      
+      # TODO: not sure if this line is necessary.
+      # It is not in the datasheet sample code pg 12
       crc = crc & 0xFF
     return crc
       
