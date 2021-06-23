@@ -25,7 +25,6 @@ Table of Contents
    :caption: Examples
 
    ex1
-   ex2
 
 .. toctree::
    :caption: Other Links
