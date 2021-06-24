@@ -62,16 +62,16 @@ _DEFAULT_NAME = "Qwiic SGP40"
 _AVAILABLE_I2C_ADDRESS = [0x59]
 
 class QwiicSGP40(object):
-  """
-  QwiicSGP40
+    """
+      QwiicSGP40
     
-    :param address: The I2C address to use for the device.
-                    If not provided, the default address is used.
-    :param i2c_driver: An existing i2c driver object. If not provided a
-                    a driver object is created.
-    :return: The GPIO device object.
-    :rtype: Object
-  """
+        :param address: The I2C address to use for the device.
+                        If not provided, the default address is used.
+        :param i2c_driver: An existing i2c driver object. If not provided a
+                        a driver object is created.
+        :return: The GPIO device object.
+        :rtype: Object
+      """
   # Constructor
   device_name = _DEFAULT_NAME
   available_addresses = _AVAILABLE_I2C_ADDRESS
