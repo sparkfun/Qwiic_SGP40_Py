@@ -1,7 +1,5 @@
 API Reference
 ==============
 
-.. automodule:: qwiic_sgp40
-   :members:
-
-.. autoclass:: QwiicSGP40
+.. automodule:: QwiicSGP40
+   :inherited-members:
