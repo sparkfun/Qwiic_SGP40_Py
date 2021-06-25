@@ -55,7 +55,7 @@ New to qwiic? Take a look at the entire [SparkFun Qwiic Ecosystem](https://www.s
 import math
 import time
 import qwiic_i2c
-from DFRobot_SGP40_VOCAlgorithm import DFRobot_VOCAlgorithm
+from . import DFRobot_SGP40_VOCAlgorithm
 
 _DEFAULT_NAME = "Qwiic SGP40"
 
@@ -104,7 +104,7 @@ class QwiicSGP40(object):
         else:
             self._i2c = i2c_driver
                 
-        self.__my_vocalgorithm = DFRobot_VOCAlgorithm()
+        self.__my_vocalgorithm = DFRobot_SGP40_VOCAlgorithm.DFRobot_VOCAlgorithm()
         self.__rh = 0
         self.__temc = 0
         self.__rh_h = 0
