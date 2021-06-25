@@ -5,4 +5,4 @@ API Reference
    :members:
 
 .. autoclass:: QwiicSGP40
-   :members:
+      :members:
