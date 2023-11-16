@@ -1,4 +1,3 @@
-from __future__ import print_function
 import qwiic_sgp40
 import time
 import sys
