@@ -226,11 +226,11 @@ class DFRobot_VOCAlgorithm:
     
     def _vocalgorithm_get_states(self,state0,state1):
         state0 = self._vocalgorithm__mean_variance_estimator__get_mean()
-        state1 = _vocalgorithm__mean_variance_estimator__get_std()
+        state1 = self._vocalgorithm__mean_variance_estimator__get_std()
         return state0,state1
     
     def _vocalgorithm_set_states(self,state0,state1):
-        self._vocalgorithm__mean_variance_estimator__set_states(params, state0, state1, self._f16(VOCALGORITHM_PERSISTENCE_UPTIME_GAMMA))
+        self._vocalgorithm__mean_variance_estimator__set_states(self.params, state0, state1, self._f16(VOCALGORITHM_PERSISTENCE_UPTIME_GAMMA))
         self.params.msraw = state0
     
     def _vocalgorithm_set_tuning_parameters(self, voc_index_offset, learning_time_hours, gating_max_duration_minutes, std_initial):
@@ -290,7 +290,7 @@ class DFRobot_VOCAlgorithm:
         self.params.m_mean_variance_estimator_mean = mean
         self.params.m_mean_variance_estimator_std = std
         self.params.m_mean_variance_estimator_uptime_gamma = uptime_gamma
-        self.params.m_mean_variance_estimator_initialized = true
+        self.params.m_mean_variance_estimator_initialized = True
         
     
     def _vocalgorithm__mean_variance_estimator__get_std(self):
