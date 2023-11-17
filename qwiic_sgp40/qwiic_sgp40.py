@@ -52,7 +52,6 @@ New to qwiic? Take a look at the entire [SparkFun Qwiic Ecosystem](https://www.s
 """
 # ----------------------------------------------------------------------
 
-import math
 import time
 import qwiic_i2c
 from . import DFRobot_SGP40_VOCAlgorithm
