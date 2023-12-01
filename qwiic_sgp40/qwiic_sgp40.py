@@ -199,7 +199,7 @@ class QwiicSGP40(object):
         """
         temp0 = self.SGP40_HEATER_OFF[0]
         temp1 = self.SGP40_HEATER_OFF[1]
-        self._i2c.writeWord(self.address, temp0, temp1)
+        self._i2c.writeByte(self.address, temp0, temp1)
 
     # --------------------------------------------------------------------
     # measure_raw(__relative_humidity, __temperature_c)
