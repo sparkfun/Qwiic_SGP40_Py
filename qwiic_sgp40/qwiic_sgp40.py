@@ -177,15 +177,25 @@ class QwiicSGP40(object):
     # soft_reset()
     #
     # Performs a soft reset
-    def soft_reset(self):
+    def soft_reset(self, ignore_error = True):
         """
             Sensor reset
             
+            :param ignore_error: Whether to ignore exception that can be raised
+            due to no ACK after reset command, defaults to True
+            :type ignore_error: bool, optional
             :rtype: void - returns nothing
         """
         temp0 = self.SGP40_SOFT_RESET[0]
         temp1 = self.SGP40_SOFT_RESET[1]
-        self._i2c.writeByte(self.address, temp0, temp1)
+
+        # Attempt to reset the sensor. The SGP40 does not send back an ACK, so
+        # an error is expected. If ignore_error is False, the error is raised.
+        try:
+            self._i2c.writeByte(self.address, temp0, temp1)
+        except:
+            if ignore_error == False:
+                raise
 
     # --------------------------------------------------------------------
     # heater_off()
