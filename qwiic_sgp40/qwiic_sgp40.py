@@ -92,7 +92,10 @@ class QwiicSGP40(object):
     def __init__(self, address=None, i2c_driver=None):
     
         # Did the user specify an I2C address?
-        self.address = address if address != None else self.available_addresses[0]
+        if address in self.available_addresses:
+            self.address = address
+        else:
+            self.address = self.available_addresses[0]
     
         # Load the I2C driver is one isn't provided
         if i2c_driver == None:
@@ -124,7 +127,7 @@ class QwiicSGP40(object):
             :return: True if the device is connected, false otherwise.
             :rtype: bool
         """
-        return qwiic_i2c.isDeviceConnected(self.address)
+        return self._i2c.isDeviceConnected(self.address)
 
     # --------------------------------------------------------------------
     # begin()
