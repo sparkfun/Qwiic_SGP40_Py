@@ -39,7 +39,7 @@
 # SOFTWARE.
 #==================================================================================
 
-"""
+"""!
 qwiic_sgp40
 ===========
 Python module for the SparkFun Air Quality Sensor - SGP40 (Qwiic).
@@ -61,15 +61,15 @@ _DEFAULT_NAME = "Qwiic SGP40"
 _AVAILABLE_I2C_ADDRESS = [0x59]
 
 class QwiicSGP40(object):
-    """
+    """!
     QwiicSGP40
-    
-        :param address: The I2C address to use for the device.
+
+    @param address: The I2C address to use for the device.
                         If not provided, the default address is used.
-        :param i2c_driver: An existing i2c driver object. If not provided a
+    @param i2c_driver: An existing i2c driver object. If not provided a
                         a driver object is created.
-        :return: The GPIO device object.
-        :rtype: Object
+
+    @return **Object** The GPIO device object.
     """
     # Constructor
     device_name = _DEFAULT_NAME
@@ -121,11 +121,10 @@ class QwiicSGP40(object):
     #
     # Is an actual board connected to our sysem?
     def is_connected(self):
-        """
-            Determine if a Qwiic SGP40 device is connected to the system.
-            
-            :return: True if the device is connected, false otherwise.
-            :rtype: bool
+        """!
+        Determine if a Qwiic SGP40 device is connected to the system.
+
+        @return **bool** True if the device is connected, false otherwise.
         """
         return self._i2c.isDeviceConnected(self.address)
 
@@ -134,12 +133,11 @@ class QwiicSGP40(object):
     # 
     # Initialize I2C communication and wait through warm-up time.
     def begin(self, warm_up_time = 10):
-        """
-            Initialize the operation of the Qwiic SGP40 and wait through warm-
+        """!
+        Initialize the operation of the Qwiic SGP40 and wait through warm-
             up time. Run is_connected() and measure_test().
-            
-            :return: Returns true if the intialization was successful, false otherwise.
-            :rtype: bool
+
+        @return **bool** Returns true if the intialization was successful, false otherwise.
         """
         if self.is_connected() == True:
             
@@ -158,11 +156,10 @@ class QwiicSGP40(object):
     #
     # Sensor runs chip self test
     def measure_test(self):
-        """
-            Sensor runs chip self test.
-            
-            :return: Returns 0 if the self-test succeeded and 1 if it failed.
-            :rtype: int
+        """!
+        Sensor runs chip self test.
+
+        @return **int** Returns 0 if the self-test succeeded and 1 if it failed.
         """
         temp0 = self.SGP40_MEASURE_TEST[0]
         temp1 = self.SGP40_MEASURE_TEST[1]
@@ -181,13 +178,11 @@ class QwiicSGP40(object):
     #
     # Performs a soft reset
     def soft_reset(self, ignore_error = True):
-        """
-            Sensor reset
-            
-            :param ignore_error: Whether to ignore exception that can be raised
+        """!
+        Sensor reset
+
+        @param bool, optional ignore_error: Whether to ignore exception that can be raised
             due to no ACK after reset command, defaults to True
-            :type ignore_error: bool, optional
-            :rtype: void - returns nothing
         """
         temp0 = self.SGP40_SOFT_RESET[0]
         temp1 = self.SGP40_SOFT_RESET[1]
@@ -205,10 +200,8 @@ class QwiicSGP40(object):
     #
     # Turns the heater off
     def heater_off(self):
-        """
-            Turns the hotplate off and puts sensor in idle mode.
-            
-            :rtype: void - returns nothing
+        """!
+        Turns the hotplate off and puts sensor in idle mode.
         """
         temp0 = self.SGP40_HEATER_OFF[0]
         temp1 = self.SGP40_HEATER_OFF[1]
@@ -220,15 +213,14 @@ class QwiicSGP40(object):
     # The raw signal is returned in SRAW_ticks. The user can provide relative
     # humidity or temperature parameters if desired.
     def measure_raw(self, __relative_humidity = 50, __temperature_c = 25):
-        """
-            Returns the raw data. See the SGP40 datasheet for more info.
-            
-            :param SRAW_ticks: variable to assign raw measurement to
-            :param __relative_humidity: float relative humidity between 0 and 100%.
-            :param __temperature_c: float temperature in celcius between -45 and 130 degrees.
-            
-            :return: 0 if CRC checks out, -1 otherwise
-            :rtype: int
+        """!
+        Returns the raw data. See the SGP40 datasheet for more info.
+
+        @param SRAW_ticks: variable to assign raw measurement to
+        @param __relative_humidity: float relative humidity between 0 and 100%.
+        @param __temperature_c: float temperature in celcius between -45 and 130 degrees.
+
+        @return **int** 0 if CRC checks out, -1 otherwise
         """
         # Check boundaries of relative humidity and temperature
         if __relative_humidity < 0:
@@ -273,12 +265,12 @@ class QwiicSGP40(object):
     #
     # Verify the calibration value of the sensor
     def __check_crc(self, raw):
-        """
-            Verify the calibration value of the sensor
-            
-            :param raw: list parameter to check
-            :return: -1 if the check failed, 0 if it succeeded
-            :rtype: int
+        """!
+        Verify the calibration value of the sensor
+
+        @param raw: list parameter to check
+
+        @return **int** -1 if the check failed, 0 if it succeeded
         """
         assert (len(raw) == 3)
         if self.__crc(raw[0], raw[1]) != raw[2]:
@@ -290,13 +282,13 @@ class QwiicSGP40(object):
     #
     # CRC calculation
     def __crc(self, data_1, data_2):
-        """
-            CRC calculation
-            
-            :param data_1: high 8 bits of data
-            :param data_2: low 8 bits of data
-            :return: calibration value
-            :rtype: int
+        """!
+        CRC calculation
+
+        @param data_1: high 8 bits of data
+        @param data_2: low 8 bits of data
+
+        @return **int** calibration value
         """
         crc = 0xff
         list = [data_1, data_2]
@@ -318,14 +310,13 @@ class QwiicSGP40(object):
     #
     # Get VOC index
     def get_VOC_index(self, __relative_humidity = 50, __temperature_c = 25):
-        """
-            Get VOC index
-            
-            :param __relative_humidity: float relative humidity between 0 and 100%.
-            :param __temperature_c: float temperature in celcius between -45 and 130 degrees.
-            
-            :return: VOC index
-            :rtype: int
+        """!
+        Get VOC index
+
+        @param __relative_humidity: float relative humidity between 0 and 100%.
+        @param __temperature_c: float temperature in celcius between -45 and 130 degrees.
+
+        @return **int** VOC index
         """
         raw = self.measure_raw(__relative_humidity, __temperature_c)
 
