@@ -1,72 +1,77 @@
-Qwiic_SGP40_Py
-===============
+![Qwiic SGP40 Python Package](docs/images/sgp40-gh-banner-py.png "qwiic SGP40 Python Package" )
 
-<p align="center">
-   <img src="https://cdn.sparkfun.com/assets/custom_pages/2/7/2/qwiic-logo-registered.jpg"  width=200>  
-   <img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png"  width=240>   
-</p>
-<p align="center">
-	<a href="https://pypi.org/project/sparkfun-qwiic-sgp40/" alt="Package">
-		<img src="https://img.shields.io/pypi/pyversions/sparkfun-qwiic-sgp40.svg" /></a>
-	<a href="https://github.com/sparkfun/Qwiic_SGP40_Py/issues" alt="Issues">
-		<img src="https://img.shields.io/github/issues/sparkfun/Qwiic_SGP40_Py.svg" /></a>
-	<a href="https://qwiic-sgp40-py.readthedocs.io/en/latest/?" alt="Documentation">
-		<img src="https://readthedocs.org/projects/qwiic-sgp40-py/badge/?version=latest&style=flat" /></a>
-	<a href="https://github.com/sparkfun/Qwiic_SGP40_Py/blob/master/LICENSE" alt="License">
-		<img src="https://img.shields.io/badge/license-MIT-blue.svg" /></a>
-	<a href="https://twitter.com/intent/follow?screen_name=sparkfun">
-        	<img src="https://img.shields.io/twitter/follow/sparkfun.svg?style=social&logo=twitter"
-           	 alt="follow on Twitter"></a>
+# SparkFun Qwiic SGP40 - Python Package
 
-</p>
+![PyPi Version](https://img.shields.io/pypi/v/sparkfun_qwiic_sgp40)
+![GitHub issues](https://img.shields.io/github/issues/sparkfun/qwiic_sgp40_py)
+![License](https://img.shields.io/github/license/sparkfun/qwiic_sgp40_py)
+![X](https://img.shields.io/twitter/follow/sparkfun)
+[![API](https://img.shields.io/badge/API%20Reference-blue)](https://docs.sparkfun.com/qwiic_sgp40_py/classqwiic__sgp40_1_1qwiic__sgp40_1_1_qwiic_s_g_p40.html)
 
-<img src="https://cdn.sparkfun.com/assets/parts/1/7/6/8/0/18345-SparkFun_Air_Quality_Sensor_Breakout_-_SGP40__Qwiic_-01.jpg"  align="right" width=300 alt="SparkFun Qwiic RFID Reader">
+The SparkFun Qwiic SGP40 Air Quality Sensor Breakout Boards provide a simple and cost effective solution for adding air quality sensing to your project. Implementing a SparkFun Qwiic I2C interface, these sensors can be rapidly added to any project with boards that are part of the SparkFun Qwiic ecosystem.
 
-Python module for the [SparkFun Qwiic Air Quality Sensor - SGP40](https://www.sparkfun.com/products/18345)
+This repository implements a Python package for the SparkFun Qwiic SGP40. This package works with Python, MicroPython and CircuitPython.
 
-This python package is a port of the existing [SparkFun SGP40 Arduino Library](https://github.com/sparkfun/SparkFun_SGP40_Arduino_Library)
+### Contents
 
-This package can be used in conjunction with the overall [SparkFun qwiic Python Package](https://github.com/sparkfun/Qwiic_Py)
+* [About](#about-the-package)
+* [Getting Started](#getting-started)
+* [Installation](#installation)
+* [Supported Platforms](#supported-platforms)
+* [Documentation](https://docs.sparkfun.com/qwiic_sgp40_py/classqwiic__sgp40_1_1qwiic__sgp40_1_1_qwiic_s_g_p40.html)
+* [Examples](#examples)
+
+## About the Package
+
+This python package enables the user to access the features of the SGP40 via a single Qwiic cable. This includes reading the volatile organic compound (VOC) index, perform a self-test, and more. The capabilities of the SGP40 are each demonstrated in the included examples.
 
 New to qwiic? Take a look at the entire [SparkFun qwiic ecosystem](https://www.sparkfun.com/qwiic).
 
-## Contents
+### Supported SparkFun Products
 
-* [Supported Platforms](#supported-platforms)
-* [Dependencies](#dependencies)
-* [Installation](#installation)
-* [Documentation](#documentation)
-* [Example Use](#example-use)
+This Python package supports the following SparkFun qwiic products on Python, MicroPython and Circuit python. 
 
-Supported Platforms
---------------------
-The Qwiic SGP40 Python package currently supports the following platforms:
-* [Raspberry Pi](https://www.sparkfun.com/search/results?term=raspberry+pi)
+* [SparkFun Air Quality Sensor - SGP40](https://www.sparkfun.com/sparkfun-air-quality-sensor-sgp40-qwiic.html)
 
-Dependencies
---------------
-This driver package depends on the qwiic I2C driver:
-[Qwiic_I2C_Py](https://github.com/sparkfun/Qwiic_I2C_Py)
+### Supported Platforms
 
-Documentation
--------------
-The SparkFun Qwiic Sgp40 module documentation is hosted at [ReadTheDocs](https://qwiic-sgp40-py.readthedocs.io/en/latest/?)
+| Python | Platform | Boards |
+|--|--|--|
+| Python | Linux | [Raspberry Pi](https://www.sparkfun.com/raspberry-pi-5-8gb.html) , [NVIDIA Jetson Orin Nano](https://www.sparkfun.com/nvidia-jetson-orin-nano-developer-kit.html) via the [SparkFun Qwiic SHIM](https://www.sparkfun.com/sparkfun-qwiic-shim-for-raspberry-pi.html) |
+| MicroPython | Raspberry Pi - RP2, ESP32 | [SparkFun RP2040 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-rp2040.html), [SparkFun RP2350 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-rp2350.html), [SparkFun ESP32 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-esp32-wroom-usb-c.html)
+|CircuitPython | Raspberry Pi - RP2, ESP32 | [SparkFun RP2040 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-rp2040.html), [SparkFun RP2350 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-rp2350.html), [SparkFun ESP32 Thing+](https://www.sparkfun.com/sparkfun-thing-plus-esp32-wroom-usb-c.html)
 
-Installation
----------------
-### PyPi Installation
+> [!NOTE]
+> The listed supported platforms and boards are the primary platform targets tested. It is fully expected that this package will work across a wide variety of Python enabled systems. 
 
-This repository is hosted on PyPi as the [sparkfun-qwiic-sgp40](https://pypi.org/project/sparkfun-qwiic-sgp40/) package. On systems that support PyPi installation via pip, this library is installed using the following commands
+## Installation 
+
+The first step to using this package is installing it on your system. The install method depends on the python platform. The following sections outline installation on Python, MicroPython and CircuitPython.
+
+### Python 
+
+The package is primarily installed using the `pip` command, downloading the package from the Python Index - "PyPi". Note - the below instructions outline installation an Linux-based (Raspberry Pi) system.
+
+#### PyPi Installation
+
+The SparkFun Qwiic SGP40 Python package is part of the overall SparkFun Qwiic Python package which is hosted on PyPi. On systems that support PyPi installation via pip, this library is installed using the following commands
 
 For all users (note: the user must have sudo privileges):
 ```sh
-sudo pip install sparkfun-qwiic-sgp40
+sudo pip install sparkfun-qwiic
 ```
 For the current user:
 
 ```sh
-pip install sparkfun-qwiic-sgp40
+pip install sparkfun-qwiic
 ```
+---
+---
+> [!CAUTION]
+> **TODO** Put together how this works with the new virtual environments used with the latest Python install
+---
+---
+#### Local Installation
 To install, make sure the setuptools package is installed on the system.
 
 Direct installation at the command line:
@@ -81,19 +86,37 @@ python setup.py sdist
 A package file is built and placed in a subdirectory called dist. This package file can be installed using pip.
 ```sh
 cd dist
-pip install sparkfun-qwiic-sgp40-<version>.tar.gz
+pip install sparkfun_qwiic_sgp40-<version>.tar.gz
+```
+
+### MicroPython Installation
+If not already installed, follow the [instructions here](https://docs.micropython.org/en/latest/reference/mpremote.html) to install mpremote on your computer.
+
+Connect a device with MicroPython installed to your computer and then install the package directly to your device with mpremote mip.
+```sh
+mpremote mip install github:sparkfun/qwiic_sgp40_py
+```
+
+### CircuitPython Installation
+If not already installed, follow the [instructions here](https://docs.circuitpython.org/projects/circup/en/latest/#installation) to install CircUp on your computer.
+
+Ensure that you have the latest version of the SparkFun Qwiic CircuitPython bundle. 
+```sh
+circup bundle-add sparkfun/Qwiic_Py
+```
+
+Finally, connect a device with CircuitPython installed to your computer and then install the package directly to your device with circup.
+```sh
+circup install --py qwiic_sgp40
 ```
 
 Example Use
- -------------
-See the examples directory for more detailed use examples.
+ ---------------
+Below is a quickstart program to print Volatile Organic Compound (VOC) Index read from the SGP40.
+
+See the examples directory for more detailed use examples and [examples/README.md](https://github.com/sparkfun/qwiic_sgp40_py/blob/main/examples/README.md) for a summary of the available examples.
 
 ```python
-from __future__ import print_function
-import qwiic_sgp40
-import time
-import sys
-
 def run_example():
 
 	print("\nSparkFun Qwiic Air Quality Sensor - SGP40, Example 1\n")
@@ -111,14 +134,8 @@ def run_example():
 		print("\nVOC Index is: " + str(my_sgp40.get_VOC_index()))
 		
 		time.sleep(1)
-
-if __name__ == '__main__':
-	try:
-		run_example()
-	except (KeyboardInterrupt, SystemExit) as exErr:
-		print("\nEnding Example 1")
-		sys.exit(0)
 ```
+
 <p align="center">
 <img src="https://cdn.sparkfun.com/assets/custom_pages/3/3/4/dark-logo-red-flame.png" alt="SparkFun - Start Something">
 </p>
