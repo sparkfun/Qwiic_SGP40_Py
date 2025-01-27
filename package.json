@@ -1,11 +1,7 @@
 {
     "urls": [
-      ["qwiic_sgp40/__init__.py", "github:sparkfun/Qwiic_SGP40_Py/qwiic_sgp40/__init__.py"],
-      ["qwiic_sgp40/DFRobot_SGP40_VOCAlgorithm.py", "github:sparkfun/Qwiic_SGP40_Py/qwiic_sgp40/DFRobot_SGP40_VOCAlgorithm.py"],
-      ["qwiic_sgp40/qwiic_sgp40.py", "github:sparkfun/Qwiic_SGP40_Py/qwiic_sgp40/qwiic_sgp40.py"]
-    ],
-    "deps": [
-      ["github:sparkfun/Qwiic_I2C_Py", "master"]
+      ["qwiic_sgp40_py_examples/qwiic_sgp40_ex1_basic_readings.py", "github:sparkfun/qwiic_sgp40_py/examples/qwiic_sgp40_ex1_basic_readings.py"],
+      ["qwiic_sgp40_py_examples/qwiic_sgp40_ex2_function_test.py", "github:sparkfun/qwiic_sgp40_py/examples/qwiic_sgp40_ex2_function_test.py"]
     ],
     "version": "0.0.5"
 }
